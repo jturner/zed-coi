@@ -1,29 +1,32 @@
 ; Coi syntax highlighting for Zed
-; This file maps tree-sitter node types to Zed highlight groups
 
 ; Comments
 (comment) @comment
 
-; Keywords
+; Keywords - definitions
 [
   "component"
   "def"
+  "struct"
+  "type"
+  "enum"
+  "app"
+  "import"
+  "extends"
+] @keyword
+
+; Keywords - blocks
+[
   "view"
   "style"
   "tick"
   "init"
   "mount"
-  "app"
-  "import"
-  "struct"
-  "type"
-  "global"
-  "enum"
   "router"
-  "extends"
+  "global"
 ] @keyword
 
-; Control flow keywords
+; Keywords - control flow
 [
   "if"
   "else"
@@ -33,44 +36,12 @@
   "in"
 ] @keyword.control
 
-; Storage modifiers
+; Keywords - modifiers
 [
   "mut"
   "pub"
   "shared"
 ] @keyword.modifier
-
-; Annotations
-(annotation) @attribute
-
-; Type annotations
-[
-  "@nocopy"
-  "@builtin"
-  "@inline"
-  "@map"
-  "@intrinsic"
-  "@alias"
-] @attribute
-
-; Built-in types
-[
-  "int"
-  "int8"
-  "int16"
-  "int32"
-  "int64"
-  "uint8"
-  "uint16"
-  "uint32"
-  "uint64"
-  "float"
-  "float32"
-  "float64"
-  "void"
-  "string"
-  "bool"
-] @type.builtin
 
 ; Boolean literals
 [
@@ -78,14 +49,21 @@
   "false"
 ] @constant.builtin
 
-; Numeric literals
-(number) @number
+; Built-in types
+(builtin_type) @type.builtin
+
+; Strings
+(string) @string
+(escape_sequence) @string.escape
+
+; Numbers
 (integer) @number
 (float_literal) @number
 
-; String literals
-(string) @string
-(escape_sequence) @string.escape
+; Annotations
+(annotation
+  "@" @attribute
+  (identifier) @attribute)
 
 ; Operators
 [
@@ -104,8 +82,6 @@
   "%="
   "=="
   "!="
-  "<"
-  ">"
   "<="
   ">="
   "&&"
@@ -113,26 +89,20 @@
   "!"
   "=>"
   ":="
-  "&"
-  ":"
+  "?"
 ] @operator
 
-; Punctuation
+; Punctuation - brackets
 [
   "{"
   "}"
-] @punctuation.bracket
-
-[
   "["
   "]"
-] @punctuation.bracket
-
-[
   "("
   ")"
 ] @punctuation.bracket
 
+; Punctuation - XML-style brackets in views
 [
   "<"
   ">"
@@ -140,10 +110,13 @@
   "</"
 ] @punctuation.bracket
 
+; Punctuation - delimiters
 [
   ";"
   ","
   "."
+  ":"
+  "&"
 ] @punctuation.delimiter
 
 ; Component definitions
@@ -154,13 +127,17 @@
 (type_definition
   name: (identifier) @type)
 
+; Struct definitions
+(struct_definition
+  name: (identifier) @type)
+
 ; Enum definitions
 (enum_definition
   name: (identifier) @type)
 
-; Struct definitions
-(struct_definition
-  name: (identifier) @type)
+; Enum variants
+(enum_variant
+  name: (identifier) @constant)
 
 ; Function definitions
 (function_definition
@@ -169,6 +146,21 @@
 ; Method definitions
 (method_definition
   name: (identifier) @function.method)
+
+; Parameters
+(parameter
+  type: (_) @type
+  name: (identifier) @variable.parameter)
+
+; Field definitions
+(field_definition
+  type: (_) @type
+  name: (identifier) @property)
+
+; Variable declarations
+(variable_declaration
+  type: (_) @type
+  name: (identifier) @variable)
 
 ; Function calls
 (call_expression
@@ -179,52 +171,30 @@
   function: (member_expression
     property: (identifier) @function.method.call))
 
-; Member access
-(member_expression
-  object: (identifier) @variable)
-
-; Property access
+; Member/property access
 (member_expression
   property: (identifier) @property)
 
-; Parameters
-(parameter
-  name: (identifier) @variable.parameter)
+; Route definitions
+(route_definition
+  path: (string) @string.special
+  component: (identifier) @type)
 
-; Variables
-(variable_declaration
-  name: (identifier) @variable)
+; App properties
+(app_property
+  name: (identifier) @property)
 
-; Identifiers (default)
-(identifier) @variable
-
-; Type references (capitalized identifiers)
-((identifier) @type
-  (#match? @type "^[A-Z]"))
-
-; Component instances in view blocks
-(element
-  tag: (identifier) @type
-  (#match? @type "^[A-Z]"))
-
-; HTML elements in view blocks
+; View elements - tag names
 (element
   tag: (identifier) @tag)
 
-; HTML attributes
+; View attributes
 (attribute
   name: (identifier) @attribute)
-
-; Event handlers (onclick, onchange, etc.)
-((attribute
-  name: (identifier) @function)
-  (#match? @function "^on[a-z]+"))
-
-; Class attribute special handling
-((attribute
-  name: (identifier) @attribute)
-  (#eq? @attribute "class"))
 
 ; Import paths
 (import_statement
   path: (string) @string.special)
+
+; Fallback - all other identifiers
+(identifier) @variable

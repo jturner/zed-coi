@@ -1,0 +1,10 @@
+# Downloaded tree-sitter grammars
+grammars/
+
+# macOS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*~
