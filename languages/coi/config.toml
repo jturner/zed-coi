@@ -1,0 +1,25 @@
+name = "Coi"
+grammar = "coi"
+path_suffixes = ["coi", "d.coi"]
+line_comments = ["// "]
+tab_size = 4
+hard_tabs = false
+word_characters = ["_"]
+
+[brackets]
+# Bracket pairs for matching
+pairs = [
+  ["{", "}"],
+  ["[", "]"],
+  ["(", ")"],
+  ["<", ">"],
+]
+
+# Auto-close brackets
+auto_close = [
+  ["{", "}"],
+  ["[", "]"],
+  ["(", ")"],
+  ["\"", "\""],
+  ["'", "'"],
+]
