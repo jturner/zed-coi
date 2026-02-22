@@ -6,13 +6,16 @@
 ; Keywords - definitions
 [
   "component"
+  "pod"
   "def"
   "struct"
   "type"
   "enum"
   "app"
   "import"
+  "module"
   "extends"
+  "match"
 ] @keyword
 
 ; Keywords - blocks
@@ -33,6 +36,7 @@
   "for"
   "while"
   "return"
+  "yield"
   "in"
 ] @keyword.control
 
@@ -54,11 +58,14 @@
 
 ; Strings
 (string) @string
+(template_string) @string
 (escape_sequence) @string.escape
 
 ; Numbers
 (integer) @number
 (float_literal) @number
+(hex_literal) @number
+(binary_literal) @number
 
 ; Annotations
 (annotation
@@ -80,6 +87,11 @@
   "*="
   "/="
   "%="
+  "&="
+  "|="
+  "^="
+  "<<="
+  ">>="
   "=="
   "!="
   "<="
@@ -87,6 +99,11 @@
   "&&"
   "||"
   "!"
+  "|"
+  "^"
+  "~"
+  "<<"
+  ">>"
   "=>"
   ":="
   "?"
@@ -121,6 +138,10 @@
 
 ; Component definitions
 (component_definition
+  name: (identifier) @type)
+
+; Pod definitions
+(pod_definition
   name: (identifier) @type)
 
 ; Type definitions
@@ -175,6 +196,28 @@
 (member_expression
   property: (identifier) @property)
 
+; Namespace access (Enum::Variant or Module::Component)
+(namespace_expression
+  namespace: (identifier) @type
+  name: (identifier) @constant)
+
+; Match patterns
+(else_pattern) @keyword.control
+
+(enum_pattern
+  type: (identifier) @type
+  variant: (identifier) @constant)
+
+(pod_pattern
+  type: (identifier) @type)
+
+(pod_field_pattern
+  name: (identifier) @property)
+
+(variant_pattern
+  type: (identifier) @type
+  param_name: (identifier) @variable.parameter)
+
 ; Route definitions
 (route_definition
   path: (string) @string.special
@@ -195,6 +238,10 @@
 ; Import paths
 (import_statement
   path: (string) @string.special)
+
+; Module names
+(module_statement
+  name: (identifier) @namespace)
 
 ; Fallback - all other identifiers
 (identifier) @variable

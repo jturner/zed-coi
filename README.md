@@ -11,6 +11,7 @@ Coi is a component-based language for building high-performance web applications
 - Bracket matching
 - Auto-indentation
 - Symbol outline
+- Text objects for navigation
 - CSS injection in style blocks
 
 ## Installation
@@ -42,12 +43,21 @@ import "components/Button.coi";
 component Counter {
     mut int count = 0;
 
+    enum Direction { Up, Down }
+
     def increment() : void {
         count++;
     }
 
     def decrement() : void {
         count--;
+    }
+
+    def label(Direction dir) : string {
+        return match (dir) {
+            Direction::Up => "+";
+            Direction::Down => "-";
+        };
     }
 
     style {
@@ -60,9 +70,9 @@ component Counter {
 
     view {
         <div class="counter">
-            <Button label="-" &onclick={decrement} />
+            <Button label={label(Direction::Down)} &onclick={decrement} />
             <span>{count}</span>
-            <Button label="+" &onclick={increment} />
+            <Button label={label(Direction::Up)} &onclick={increment} />
         </div>
     }
 }

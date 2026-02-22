@@ -3,6 +3,7 @@
 ; Indent after opening braces
 [
   (component_definition)
+  (pod_definition)
   (function_definition)
   (method_definition)
   (type_definition)
@@ -15,6 +16,7 @@
   (tick_block)
   (app_block)
   (router_block)
+  (match_expression)
   (if_statement)
   (else_clause)
   (for_statement)
