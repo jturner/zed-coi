@@ -201,6 +201,11 @@
   namespace: (identifier) @type
   name: (identifier) @constant)
 
+; Dotted type references (Component.EnumName)
+(dotted_type
+  object: (identifier) @type
+  name: (identifier) @type)
+
 ; Match patterns
 (else_pattern) @keyword.control
 
